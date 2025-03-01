@@ -59,10 +59,14 @@ int
 strncmp(const char *p, const char *q, uint n)
 {
   while(n > 0 && *p && *p == *q)
+  // tant que n>0 on ne dépasse pas la limite donnée par n
+  // tant que p et q ne sont pas nuls \0 et que les caractères sont égaux
     n--, p++, q++;
   if(n == 0)
+  // si n=0 alors on a parcouru n caractères et ils sont tous égaux
     return 0;
   return (uchar)*p - (uchar)*q;
+  // sinon on retourne la différence en ASCII entre les deux caractères
 }
 
 char*
@@ -102,4 +106,3 @@ strlen(const char *s)
     ;
   return n;
 }
-

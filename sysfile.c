@@ -6,6 +6,7 @@
 
 #include "types.h"
 #include "defs.h"
+// implémentation de strncpy et strncmp dans string.c à travers defs.h
 #include "param.h"
 #include "stat.h"
 #include "mmu.h"
@@ -21,25 +22,6 @@ extern int tracecount;
 extern int traceenabled;
 
 char tracepathname[256] = "";
-
-int
-strcmp(const char *p, const char *q)
-{
-  while(*p && *p == *q)
-    p++, q++;
-  return (uchar)*p - (uchar)*q;
-}
-
-char*
-strcpy(char *s, const char *t)
-{
-  char *os;
-
-  os = s;
-  while((*s++ = *t++) != 0)
-    ;
-  return os;
-}
 
 // Fetch the nth word-sized system call argument as a file descriptor
 // and return both the descriptor and the corresponding struct file.
@@ -115,14 +97,19 @@ int
 sys_trace(void)
 {
   char *pathname;
-  argstr(0, &pathname);
-  // if (argstr(0, &pathname) < 0)
-  //  return -1;
+
+  if (argstr(0, &pathname) < 0)
+    return -1;
+    // return -1 if the pathname is invalid
+
+  if (strlen(pathname) > 256 || strlen(pathname) == 0)
+    return -1;
+    // return -1 if the pathname is invalid (too long or empty)
       
 	tracecount = 0;
 	traceenabled = 1;
 
-  strcpy(tracepathname, pathname); 
+  strncpy(tracepathname, pathname, 256); 
 
   return 0;	 
 }
@@ -130,6 +117,7 @@ sys_trace(void)
 int
 sys_gettracecount(void)
 {
+  traceenabled = 0;
   return tracecount;
 }
 
@@ -348,7 +336,10 @@ sys_open(void)
   if(argstr(0, &path) < 0 || argint(1, &omode) < 0)
     return -1;
 
-  if(traceenabled == 1 && strcmp(path, tracepathname) == 0) {
+  // Utilisation de strncmp plutôt que strcmp
+  // strcmp est utilisé dans l'espace user, alors qu'ici on est dans l'espace kernel
+  // limite de 256 car on suppose que le chemin est de taille 256 max
+  if(traceenabled == 1 && strncmp(path, tracepathname, 256) == 0) {
     tracecount++;
   }
 
