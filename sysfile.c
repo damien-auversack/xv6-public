@@ -15,8 +15,12 @@
 #include "sleeplock.h"
 #include "file.h"
 #include "fcntl.h"
+// #include "user.h"
 
 extern int readcount;
+extern int tracecount;
+extern int traceenabled;
+// extern char tracepathname;
 
 // Fetch the nth word-sized system call argument as a file descriptor
 // and return both the descriptor and the corresponding struct file.
@@ -86,6 +90,28 @@ int
 sys_getreadcount(void)
 {
   return readcount;
+}
+
+int
+sys_trace(void)
+{
+  // char *pathname;
+
+  // if (argstr(0, &pathname) < 0)
+  //  return -1;
+      
+	tracecount = 0;
+	traceenabled = 1;
+
+	// tracepathname = *pathname;  
+
+  return 0;	 
+}
+
+int
+sys_gettracecount(void)
+{
+  return tracecount;
 }
 
 int
@@ -299,6 +325,10 @@ sys_open(void)
   int fd, omode;
   struct file *f;
   struct inode *ip;
+
+  // if(traceenabled == 1 && strcmp(tracepathname, path) == 0) {
+	//  tracecount++;
+  //}
 
   if(argstr(0, &path) < 0 || argint(1, &omode) < 0)
     return -1;
