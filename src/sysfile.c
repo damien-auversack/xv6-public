@@ -117,7 +117,6 @@ sys_trace(void)
 int
 sys_gettracecount(void)
 {
-  traceenabled = 0;
   return tracecount;
 }
 

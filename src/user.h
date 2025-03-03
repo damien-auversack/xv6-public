@@ -24,7 +24,7 @@ char* sbrk(int);
 int sleep(int);
 int uptime(void);
 int getreadcount(void);
-int trace(const char *pathname);
+int trace(char *pathname);
 int gettracecount(void);
 
 // ulib.c
