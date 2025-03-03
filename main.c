@@ -12,6 +12,8 @@ extern pde_t *kpgdir;
 extern char end[]; // first address after kernel loaded from ELF file
 
 int readcount = 0;
+int tracecount = 0;
+int traceenabled = 0;
 
 // Bootstrap processor starts running C code here.
 // Allocate a real stack and switch to it, first

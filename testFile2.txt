@@ -1,0 +1,1 @@
+Deuxième fichier de test pour vérifier que "trace" ne monitore d'un fichier à la fois.
